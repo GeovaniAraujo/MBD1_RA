@@ -1,52 +1,25 @@
 package Model;
 
+import Repository.InvetoryDAO;
 import Repository.SceneDAO;
 
 import java.sql.SQLException;
 
 public class Commands {
 
-
-
-    public static Boolean validacao(String[] arrayCmd){
-        String[] cmdValido = {"get","use","help","inventory","save","start"};
-        boolean validacao = false;                                  //validação
-        if (arrayCmd.length==1) {                                   //se for um comando start,help,inventory,save
-            for (String s : cmdValido) {
-                if (arrayCmd[0].equalsIgnoreCase(s)){              //valida se o 1º comando esta ok
-                    validacao = true;                               //comando validado
-                    break;
-                }
-            }
-        }else if (arrayCmd.length==2){
-            for (String s : cmdValido) {
-                if (arrayCmd[0].equalsIgnoreCase(cmdValido[0]) || arrayCmd[0].equalsIgnoreCase(cmdValido[1])) {              //valida se o 1º comando esta ok
-                    validacao = true;                               //comando validado
-                    break;
-                }
-            }
-        } else if (arrayCmd.length==4){                             //se o tamanho for igual a 4
-            if (arrayCmd[0].equalsIgnoreCase("use")){   //se o 1º for use
-                if (arrayCmd[2].equals("with")){                   //se a 3ª palavra do comando for igual a "with"
-                    validacao = true;
-                }
-            }
-        }
-        if (!validacao){
-            System.out.println("Comando inválido.");
-        }
-        return validacao;
+    public static void nextScene(int idScene) throws SQLException {
+        Scene newScene = SceneDAO.findSceneById(idScene);
+        System.out.println(newScene.getTitleScene());
+        System.out.println(newScene.getDcScene());
     }
 
-    public static void  validacao2(String[] arrayCmd){
-        String[] cmdValido = {"get","use","help","inventory","save","start"};
-        if (arrayCmd[0].equalsIgnoreCase("get")){
+    public static void get(int idItem) throws SQLException {
+        InvetoryDAO.addItem(idItem);
+        System.out.println("Item adicionado ao inventário.");
+    }
 
-        } else if(arrayCmd[0].equalsIgnoreCase("use")){
+    public static void use(int idItem){
 
-        }
-        //get taco (cena 0);
-        //use taco (cena 2);
     }
 
     public static void start() throws SQLException {
@@ -68,9 +41,113 @@ public class Commands {
         System.out.println("*(-ITEM) item retirado do inventário.");
     }
 
-    public static void inventory(){
+    public static void saveGame(){
 
     }
 
 
+    public static void validacao(String[] arrayCmd) throws SQLException {
+        String[] cmdValido = {"get", "use", "help", "inventory", "save", "start"};
+        String cmd = null;
+        for (int i = 0; i < arrayCmd.length; i++) {
+            for (int j = 0; j < cmdValido.length; j++) {
+                if (arrayCmd[i].equalsIgnoreCase(cmdValido[j])) {
+                    cmd = cmdValido[j];
+                    break;
+                }
+            }
+        }
+
+        String[] itensValidos = {"TACO","MEIA","CORDA","CAMINHÃO","PEDRA","MANGUAL","9MM",".45","DOSE"};
+        String item = "";
+        Integer items = null;
+        for (int i = 0; i < arrayCmd.length; i++) {
+            if(arrayCmd.length>1&&i==1||i==3){
+                for (int j = 0; j < itensValidos.length; j++) {
+                    if (arrayCmd[i].equalsIgnoreCase(itensValidos[j])) {
+                        item = itensValidos[j];
+                        break;
+                    }else{
+                        item = "0";
+                    }
+                }
+            }
+        }
+
+        if(item.equalsIgnoreCase("TACO")){
+            items=1;
+        } else if (item.equalsIgnoreCase("MEIA")){
+            items=2;
+        }else if (item.equalsIgnoreCase("CORDA")){
+            items=4;
+        }else if (item.equalsIgnoreCase("CAMINHÃO")){
+            items=5;
+        }else if (item.equalsIgnoreCase("PEDRA")){
+            items=6;
+        }else if (item.equalsIgnoreCase("MANGUAL")){
+            items=7;
+        }else if (item.equalsIgnoreCase("9MM")){
+            items=8;
+        }else if (item.equalsIgnoreCase(".45")){
+            items=9;
+        }else if (item.equalsIgnoreCase("DOSE")){
+            items=10;
+        } else if(item.equals("0")){
+            System.out.println("Item inválido");
+        }
+
+        if (cmd=="start"){
+            Commands.start();
+        } else if(cmd=="help"){
+            Commands.help();
+        } else if (cmd=="inventory") {
+            InvetoryDAO.searchInventory();
+        } else if(cmd=="get"){
+            Commands.get(items);
+        } else if (cmd=="use") {
+
+        } else {
+            System.out.println("Não entendi");
+        }
+    }
 }
+
+//    public static Boolean validacao(String[] arrayCmd){
+//        String[] cmdValido = {"get","use","help","inventory","save","start"};
+//        boolean validacao = false;                                  //validação
+//        if (arrayCmd.length==1) {                                   //se for um comando start,help,inventory,save
+//            for (String s : cmdValido) {
+//                if (arrayCmd[0].equalsIgnoreCase(s)){              //valida se o 1º comando esta ok
+//                    validacao = true;                               //comando validado
+//                    break;
+//                }
+//            }
+//        }else if (arrayCmd.length==2){
+//            for (String s : cmdValido) {
+//                if (arrayCmd[0].equalsIgnoreCase(cmdValido[0]) || arrayCmd[0].equalsIgnoreCase(cmdValido[1])) {              //valida se o 1º comando esta ok
+//                    validacao = true;                               //comando validado
+//                    break;
+//                }
+//            }
+//        } else if (arrayCmd.length==4){                             //se o tamanho for igual a 4
+//            if (arrayCmd[0].equalsIgnoreCase("use")){   //se o 1º for use
+//                if (arrayCmd[2].equals("with")){                   //se a 3ª palavra do comando for igual a "with"
+//                    validacao = true;
+//                }
+//            }
+//        }
+//        if (!validacao){
+//            System.out.println("Comando inválido.");
+//        }
+//        return validacao;
+//    }
+
+//    public static void  validacao2(String[] arrayCmd){
+//        String[] cmdValido = {"get","use","help","inventory","save","start"};
+//        if (arrayCmd[0].equalsIgnoreCase("get")){
+//
+//        } else if(arrayCmd[0].equalsIgnoreCase("use")){
+//
+//        }
+//    }
+

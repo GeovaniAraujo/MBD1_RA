@@ -1,7 +1,10 @@
 import Model.Commands;
 import Model.Item;
+import Model.Save;
 import Model.Scene;
+import Repository.InvetoryDAO;
 import Repository.ItemDAO;
+import Repository.SaveDAO;
 import Repository.SceneDAO;
 
 import javax.xml.transform.Source;
@@ -14,17 +17,22 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         Commands.help();
-        boolean straightOn = false;
 
         String cmd = sc.nextLine();
         String[] arrayCmd = cmd.split(" ");
 
-        if (Commands.validacao(arrayCmd)&&arrayCmd[0].equalsIgnoreCase("start")){
-            Commands.start();
-            straightOn = true;
-        }
+        Commands.validacao(arrayCmd);
+//
+//        System.out.println(SaveDAO.newGame());
+//
+//        Commands.validacao(arrayCmd);
 
-        cmd = sc.nextLine();
+
+//        if (Commands.validacao(arrayCmd)&&arrayCmd[0].equalsIgnoreCase("start")){
+//            Commands.start();
+//        }
+
+//        cmd = sc.nextLine();
 
 //        if (){
 //

@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemDAO {
-    public static List<Item> findItemByScene(Integer id) throws SQLException {
+    public static List<Item> findItemByScene(int id) throws SQLException {
         Connection conn = MySql.getConnection();
-        String sql = "SELECT * FROM item WHERE idScene = ?";
+        String sql = "SELECT * FROM item WHERE id_scene = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setInt(1, id);
         ResultSet rs = stmt.executeQuery();
@@ -22,11 +22,11 @@ public class ItemDAO {
 
         while(rs.next()){
             item = new Item();
-            item.setIdItem(rs.getInt("idItem"));
-            item.setNameItem(rs.getString("nameItem"));
-            item.setPositiveResult(rs.getString("positiveResult"));
-            item.setNegativeResult(rs.getString("negativeResult"));
-            item.setCorrectCmd(rs.getString("correctCommand"));
+            item.setIdItem(rs.getInt("id_item"));
+            item.setNameItem(rs.getString("name_item"));
+            item.setPositiveResult(rs.getString("positive_result"));
+            item.setNegativeResult(rs.getString("negative_result"));
+            item.setCorrectCmd(rs.getString("correct_cmd"));
             item.setGot(rs.getBoolean("got"));
             item.setIdScene(SceneDAO.findSceneById(id));
             listItem.add(item);
@@ -34,9 +34,31 @@ public class ItemDAO {
         return listItem;
     }
 
-    public static void addItem(int id) throws SQLException {
+    public static Item findItemById(int id) throws SQLException {
         Connection conn = MySql.getConnection();
-        String sql = "INSERT INTO inventory VALUES (?,)";
-        PreparedStatement stmt = conn.prepareStatement();
+        String sql = "SELECT * FROM item WHERE id_item = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, id);
+        ResultSet rs = stmt.executeQuery();
+
+        Item item = new Item();
+
+        if (rs.next()){
+            item.setIdItem(rs.getInt("id_item"));
+            item.setNameItem(rs.getString("name_item"));
+            item.setPositiveResult(rs.getString("positive_result"));
+            item.setNegativeResult(rs.getString("negative_result"));
+            item.setCorrectCmd(rs.getString("correct_cmd"));
+            item.setGot(rs.getBoolean("got"));
+            item.setIdScene(SceneDAO.findSceneById(id));
+        }
+
+        return item;
     }
+
+//    public static void addItem(int id) throws SQLException {
+//        Connection conn = MySql.getConnection();
+//        String sql = "INSERT INTO inventory VALUES (?,)";
+//        PreparedStatement stmt = conn.prepareStatement();
+//    }
 }
