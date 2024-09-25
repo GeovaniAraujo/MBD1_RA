@@ -1,11 +1,25 @@
 package Model;
 
 import Repository.InvetoryDAO;
+import Repository.ItemDAO;
 import Repository.SceneDAO;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Commands {
+
+//    public static void whileCmds(String cmd) throws SQLException {
+//        Scanner sc = new Scanner(System.in);
+//        String[] arrayCmd = cmd.split(" ");
+//
+//        while (arrayCmd[0].equalsIgnoreCase("inventory") || arrayCmd[0].equalsIgnoreCase("help") || arrayCmd[0].equalsIgnoreCase("save")) {
+//            Commands.validacao(arrayCmd);
+//            cmd = sc.nextLine();
+//            arrayCmd = cmd.split(" ");
+//        }
+//    }
 
     public static void nextScene(int idScene) throws SQLException {
         Scene newScene = SceneDAO.findSceneById(idScene);
@@ -14,8 +28,9 @@ public class Commands {
     }
 
     public static void get(int idItem) throws SQLException {
-        InvetoryDAO.addItem(idItem);
-        System.out.println("Item adicionado ao inventário.");
+        if(InvetoryDAO.addItem(idItem)) {//me pareceu gambiarra!
+            System.out.println("Item adicionado ao inventário.");
+        }
     }
 
     public static void use(int idItem){
@@ -45,20 +60,17 @@ public class Commands {
 
     }
 
-
-    public static void validacao(String[] arrayCmd) throws SQLException {
-        String[] cmdValido = {"get", "use", "help", "inventory", "save", "start"};
-        String cmd = null;
-        for (int i = 0; i < arrayCmd.length; i++) {
-            for (int j = 0; j < cmdValido.length; j++) {
-                if (arrayCmd[i].equalsIgnoreCase(cmdValido[j])) {
-                    cmd = cmdValido[j];
-                    break;
-                }
-            }
+    public static ArrayList<String> validacaoItemCena(int idScene) throws SQLException {
+        ArrayList<String> nomes = new ArrayList<>();
+        for(int i=0; i<ItemDAO.findItemByScene(idScene).size();i++){
+            nomes.add(ItemDAO.findItemByScene(idScene).get(i).getNameItem());
         }
+        return nomes;
+    }
 
+    public static Integer validacaoItem(String[] arrayCmd) throws SQLException {
         String[] itensValidos = {"TACO","MEIA","CORDA","CAMINHÃO","PEDRA","MANGUAL","9MM",".45","DOSE"};
+        String cmd = null;
         String item = "";
         Integer items = null;
         for (int i = 0; i < arrayCmd.length; i++) {
@@ -95,21 +107,76 @@ public class Commands {
         } else if(item.equals("0")){
             System.out.println("Item inválido");
         }
+        return items;
+    }
 
-        if (cmd=="start"){
-            Commands.start();
-        } else if(cmd=="help"){
-            Commands.help();
-        } else if (cmd=="inventory") {
-            InvetoryDAO.searchInventory();
-        } else if(cmd=="get"){
-            Commands.get(items);
-        } else if (cmd=="use") {
 
-        } else {
-            System.out.println("Não entendi");
+    public static void validacao(String[] arrayCmd,int idScene) throws SQLException {
+        Scanner sc = new Scanner(System.in);
+        String[] cmdValido = {"get", "use", "help", "inventory", "save", "start"};
+
+        boolean bool = false;
+        while (!bool) {
+            String cmd = null;
+
+            bool = true;
+            for (int i = 0; i < arrayCmd.length; i++) {
+                for (int j = 0; j < cmdValido.length; j++) {
+                    if (arrayCmd[i].equalsIgnoreCase(cmdValido[j])) {
+                        cmd = cmdValido[j];
+                        break;
+                    }
+                }
+            }
+
+            if (cmd.equalsIgnoreCase("start")){
+                Commands.start();
+            } else if (cmd.equalsIgnoreCase("help")){
+                Commands.help();
+                bool = false;
+            } else if (cmd.equalsIgnoreCase("inventory")){
+                InvetoryDAO.searchInventory();
+                bool = false;
+            } else if (cmd.equalsIgnoreCase("get")){
+                boolean bool2 = false;
+                for (int i = 0; i < validacaoItemCena(idScene).size(); i++) {
+                    if (validacaoItemCena(idScene).get(i).equalsIgnoreCase(arrayCmd[1])) {
+                        Commands.get(validacaoItem(arrayCmd));
+                        bool2 = true;
+                        bool=false;
+                        break;
+                    }
+                }
+                if (!bool2) {
+                    System.out.println("Item inválido.");
+                }
+
+            } else {
+                System.out.println("Não entendi...");
+            }
+            if (!bool){
+                cmd = sc.nextLine();
+                arrayCmd = cmd.split(" ");
+            }
         }
     }
+
+    public static ArrayList<String> getCorrectCmd(int cena) throws SQLException {
+        Item[] item = ItemDAO.findItemByScene(cena).toArray(new Item[0]);
+        ArrayList<String> cmdCerto = new ArrayList<>();
+        for (int i=0; i< item.length;i++){
+            cmdCerto.add(item[i].getCorrectCmd());
+        }
+        return cmdCerto;
+    }
+
+    public static void validacao3(ArrayList<String> cmd){
+        for (int i=0; i<cmd.size();i++){
+            if (cmd.get(i).equalsIgnoreCase(""));
+        }
+    }
+
+
 }
 
 //    public static Boolean validacao(String[] arrayCmd){

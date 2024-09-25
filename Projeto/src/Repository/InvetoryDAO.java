@@ -7,13 +7,15 @@ import javax.xml.transform.Result;
 import java.sql.*;
 
 public class InvetoryDAO {
-    public static void addItem(int idItem) throws SQLException {
+    public static boolean addItem(int idItem) throws SQLException {
         Connection conn = MySql.getConnection();
 
         String sql = "SELECT id_item_i FROM inventory WHERE id_item_i = ?;";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setInt(1, idItem);
         ResultSet rs = stmt.executeQuery();
+
+        boolean bool = false;
 
         if (rs.next()) {
             System.out.println("Item já está no inventário.");
@@ -22,7 +24,10 @@ public class InvetoryDAO {
             PreparedStatement stmt2 = conn.prepareStatement(sql2);
             stmt2.setInt(1, idItem);
             stmt2.executeUpdate();
+            bool = true;
         }
+
+        return bool;
     }
 
     public static void searchInventory() throws SQLException {
@@ -32,9 +37,8 @@ public class InvetoryDAO {
         ResultSet rs = stmt.executeQuery();
 
         boolean bool = false;
-
+        System.out.println("Itens do inventário:");
         while(rs.next()){
-            System.out.println("Itens do inventário:");
             System.out.println(ItemDAO.findItemById(rs.getInt("id_item_i")).getNameItem());
             bool = true;
         }
@@ -42,4 +46,20 @@ public class InvetoryDAO {
             System.out.println("Sem itens no inventário.");
         }
     }
+
+    public static boolean findItemInventory(int idItem) throws SQLException {
+        Connection conn = MySql.getConnection();
+        String sql = "SELECT id_item_i FROM inventory WHERE id_item_i = ?;";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, idItem);
+        ResultSet rs = stmt.executeQuery();
+
+        boolean bool = false;
+        if (rs.next()){
+            bool = true;
+        }
+        return bool;
+    }
+
+
 }
