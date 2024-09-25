@@ -1,16 +1,8 @@
 import Model.Commands;
-import Model.Item;
-import Model.Save;
-import Model.Scene;
 import Repository.InvetoryDAO;
-import Repository.ItemDAO;
-import Repository.SaveDAO;
-import Repository.SceneDAO;
 
-import javax.xml.transform.Source;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Scanner;
 
 public class Main {
@@ -19,7 +11,7 @@ public class Main {
 
         Commands.help();
 
-        int cenaAtual = 0;
+        int idScene = 0;
 
         String cmd = sc.nextLine();
 
@@ -28,22 +20,45 @@ public class Main {
             cmd = sc.nextLine();
         }
 
-        String[] arrayCmd = cmd.split(" ");
-        Commands.validacao(arrayCmd,cenaAtual);
+        Commands.validacao(cmd,idScene);
         //Cena 0
 
-        cmd = sc.nextLine();
-        arrayCmd = cmd.split(" ");
 
-        while(arrayCmd[0].equalsIgnoreCase("inventory")||arrayCmd[0].equalsIgnoreCase("help")||arrayCmd[0].equalsIgnoreCase("save")){
-            Commands.validacao(arrayCmd,cenaAtual);
+        while (!cmd.equalsIgnoreCase("use porta")) { //se o comando que vir não for "use porta" ele n entra no djanho do while
             cmd = sc.nextLine();
-            arrayCmd = cmd.split(" ");
+            cmd=Commands.validacao(cmd,idScene);
+            while (cmd.equalsIgnoreCase("use porta")&&!InvetoryDAO.findItemInventory(1)&&!InvetoryDAO.findItemInventory(2)){
+                System.out.println("Pegue algum item.");
+                cmd = sc.nextLine();
+                cmd=Commands.validacao(cmd,idScene);
+            }
         }
+        idScene=Commands.nextScene(idScene);
 
-        Commands.validacao(arrayCmd,cenaAtual);
+        
+
+        cmd = sc.nextLine();
 
 
+
+
+        Commands.validacao(cmd,idScene);
+
+
+//        Commands.getCorrectCmd(cenaAtual);
+
+//
+//        cmd = sc.nextLine();
+//        while(!cmd.equalsIgnoreCase("use porta")){
+//            System.out.println("Comando inválido.");
+//            cmd = sc.nextLine();
+//        }
+
+//        while(arrayCmd[0].equalsIgnoreCase("inventory")||arrayCmd[0].equalsIgnoreCase("help")||arrayCmd[0].equalsIgnoreCase("save")){
+//            Commands.validacao(arrayCmd,cenaAtual);
+//            cmd = sc.nextLine();
+//            arrayCmd = cmd.split(" ");
+//        }
 
 
 //        List<Item> listaItem = ItemDAO.findItemByScene(0);
@@ -66,29 +81,6 @@ public class Main {
 //            }
 //
 //        }
-
-        cmd = sc.nextLine();
-        arrayCmd = cmd.split(" ");
-
-        if (cmd.equalsIgnoreCase("use porta")){
-
-        }
-
-
-        Commands.validacao(arrayCmd,cenaAtual);
-
-
-//        Commands.getCorrectCmd(cenaAtual);
-
-//
-//        cmd = sc.nextLine();
-//        while(!cmd.equalsIgnoreCase("use porta")){
-//            System.out.println("Comando inválido.");
-//            cmd = sc.nextLine();
-//        }
-
-
-
 
     }
 }

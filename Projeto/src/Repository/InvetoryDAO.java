@@ -1,9 +1,5 @@
 package Repository;
 
-import Model.Inventory;
-import Model.Item;
-
-import javax.xml.transform.Result;
 import java.sql.*;
 
 public class InvetoryDAO {

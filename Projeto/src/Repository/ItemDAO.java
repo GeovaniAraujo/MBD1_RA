@@ -20,7 +20,7 @@ public class ItemDAO {
         Item item;
         List<Item> listItem = new ArrayList<>();
 
-        while(rs.next()){
+        while (rs.next()) {
             item = new Item();
             item.setIdItem(rs.getInt("id_item"));
             item.setNameItem(rs.getString("name_item"));
@@ -43,7 +43,7 @@ public class ItemDAO {
 
         Item item = new Item();
 
-        if (rs.next()){
+        if (rs.next()) {
             item.setIdItem(rs.getInt("id_item"));
             item.setNameItem(rs.getString("name_item"));
             item.setPositiveResult(rs.getString("positive_result"));
@@ -56,9 +56,28 @@ public class ItemDAO {
         return item;
     }
 
-//    public static void addItem(int id) throws SQLException {
-//        Connection conn = MySql.getConnection();
-//        String sql = "INSERT INTO inventory VALUES (?,)";
-//        PreparedStatement stmt = conn.prepareStatement();
-//    }
+    public static List<Item> findItemByNextScene(int id) throws SQLException {
+        Connection conn = MySql.getConnection();
+        String sql = "SELECT * FROM item WHERE id_next_scene = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, id+1);
+        ResultSet rs = stmt.executeQuery();
+
+        Item item;
+        List<Item> listItem = new ArrayList<>();
+
+        while (rs.next()) {
+            item = new Item();
+            item.setIdItem(rs.getInt("id_item"));
+            item.setNameItem(rs.getString("name_item"));
+            item.setPositiveResult(rs.getString("positive_result"));
+            item.setNegativeResult(rs.getString("negative_result"));
+            item.setCorrectCmd(rs.getString("correct_cmd"));
+            item.setGot(rs.getBoolean("got"));
+            item.setIdScene(SceneDAO.findSceneById(id));
+            listItem.add(item);
+        }
+        return listItem;
+    }
 }
+
