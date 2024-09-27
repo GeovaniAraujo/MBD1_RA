@@ -21,14 +21,15 @@ public class ItemDAO {
         List<Item> listItem = new ArrayList<>();
 
         while (rs.next()) {
-            item = new Item();
-            item.setIdItem(rs.getInt("id_item"));
-            item.setNameItem(rs.getString("name_item"));
-            item.setPositiveResult(rs.getString("positive_result"));
-            item.setNegativeResult(rs.getString("negative_result"));
-            item.setCorrectCmd(rs.getString("correct_cmd"));
-            item.setGot(rs.getBoolean("got"));
-            item.setIdScene(SceneDAO.findSceneById(id));
+            item = new Item(
+            rs.getInt("id_item"),
+            rs.getString("name_item"),
+            rs.getString("positive_result"),
+            rs.getString("negative_result"),
+            rs.getString("correct_cmd"),
+            rs.getBoolean("got"),
+            SceneDAO.findSceneById(id),
+            rs.getInt("id_next_scene"));
             listItem.add(item);
         }
         return listItem;
@@ -41,16 +42,18 @@ public class ItemDAO {
         stmt.setInt(1, id);
         ResultSet rs = stmt.executeQuery();
 
-        Item item = new Item();
+        Item item = null;
 
         if (rs.next()) {
-            item.setIdItem(rs.getInt("id_item"));
-            item.setNameItem(rs.getString("name_item"));
-            item.setPositiveResult(rs.getString("positive_result"));
-            item.setNegativeResult(rs.getString("negative_result"));
-            item.setCorrectCmd(rs.getString("correct_cmd"));
-            item.setGot(rs.getBoolean("got"));
-            item.setIdScene(SceneDAO.findSceneById(id));
+            item = new Item(
+            rs.getInt("id_item"),
+            rs.getString("name_item"),
+            rs.getString("positive_result"),
+            rs.getString("negative_result"),
+            rs.getString("correct_cmd"),
+            rs.getBoolean("got"),
+            SceneDAO.findSceneById(id),
+            rs.getInt("id_next_scene"));
         }
 
         return item;
@@ -67,17 +70,22 @@ public class ItemDAO {
         List<Item> listItem = new ArrayList<>();
 
         while (rs.next()) {
-            item = new Item();
-            item.setIdItem(rs.getInt("id_item"));
-            item.setNameItem(rs.getString("name_item"));
-            item.setPositiveResult(rs.getString("positive_result"));
-            item.setNegativeResult(rs.getString("negative_result"));
-            item.setCorrectCmd(rs.getString("correct_cmd"));
-            item.setGot(rs.getBoolean("got"));
-            item.setIdScene(SceneDAO.findSceneById(id));
+            item = new Item(
+                    rs.getInt("id_item"),
+                    rs.getString("name_item"),
+                    rs.getString("positive_result"),
+                    rs.getString("negative_result"),
+                    rs.getString("correct_cmd"),
+                    rs.getBoolean("got"),
+                    SceneDAO.findSceneById(id),
+                    rs.getInt("id_next_scene"));
             listItem.add(item);
         }
         return listItem;
+    }
+
+    public static void update(){
+
     }
 }
 

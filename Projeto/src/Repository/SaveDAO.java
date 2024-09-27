@@ -1,22 +1,21 @@
 package Repository;
 
+import Model.Commands;
 import Model.Save;
 import Model.Scene;
 
 import java.sql.*;
+import java.util.Scanner;
 
 public class SaveDAO {
 
-    public static Save saveGame(int idScene) throws SQLException {
+    public static void saveGame(int idSave,int idScene) throws SQLException {
         Connection conn = MySql.getConnection();
-        String sql = "UPDATE save SET id_scene = ?";
+        String sql = "UPDATE save SET id_scene = ? where id_save = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setInt(1, idScene);
-        ResultSet rs = stmt.executeQuery();
-        Save save = new Save();
-        save.setIdSave(4);
-        save.setScene(SceneDAO.findSceneById(idScene));
-        return save;
+        stmt.setInt(1,idScene);
+        stmt.setInt(2,idSave);
+        stmt.executeUpdate();
     }
 
     public static Save newGame() throws SQLException {
@@ -25,10 +24,28 @@ public class SaveDAO {
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.execute(sql, Statement.RETURN_GENERATED_KEYS);
         ResultSet rs = stmt.getGeneratedKeys();
-        Save save = new Save();
+        Save save = null;
         if(rs.next()){
-            save.setIdSave(rs.getInt(1));
-            save.setScene(SceneDAO.findSceneById(0));
+            save = new Save(
+            rs.getInt(1),
+            SceneDAO.findSceneById(0));
+        }
+        return save;
+    }
+
+    public static Save load() throws SQLException {
+        int idSave = Save.validacaoLoad();
+        Connection conn = MySql.getConnection();
+        String sql = "SELECT id_scene FROM save WHERE id_save = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, idSave);
+        ResultSet rs = stmt.executeQuery();
+
+        Save save = null;
+        if(rs.next()){
+            save = new Save(
+            idSave,
+            SceneDAO.findSceneById(rs.getInt("id_scene")));
         }
         return save;
     }

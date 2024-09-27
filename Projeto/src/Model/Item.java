@@ -10,6 +10,17 @@ public class Item {
     private Scene idScene;
     private Integer idNextScene;
 
+    public Item(Integer idItem, String nameItem, String positiveResult, String negativeResult, String correctCmd, boolean got, Scene idScene, Integer idNextScene) {
+        this.idItem = idItem;
+        this.nameItem = nameItem;
+        this.positiveResult = positiveResult;
+        this.negativeResult = negativeResult;
+        this.correctCmd = correctCmd;
+        this.got = got;
+        this.idScene = idScene;
+        this.idNextScene = idNextScene;
+    }
+
     public Integer getIdItem() {
         return idItem;
     }

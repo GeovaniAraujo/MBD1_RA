@@ -15,12 +15,13 @@ public class SceneDAO {                                                         
         stmt.setInt(1, id);                                        //Id setado
         ResultSet rs = stmt.executeQuery();                                     //ResultSet é um hash map que vai receber informações de coluna e valor
                                                                                 //.executeQuery, método para executar a pesquisa
-        Scene scene = new Scene();
+        Scene scene = null;
 
         if (rs.next()){                                                         //.next é um método de ResultSet para "contar" as linhas que retornaram da pesquisa feita no mysql(retorna true ou false)
-            scene.setIdScne(rs.getInt("id_scene"));                   //.getInt método utilizado para pegar o inteiro da coluna "idScene"
-            scene.setDcScene(rs.getString("dc_scene"));               //.getString pega uma String ao invés de um inteiro
-            scene.setTitleScene(rs.getString("title_scene"));
+            scene = new Scene(
+            rs.getInt("id_scene"),                                   //.getInt método utilizado para pegar o inteiro da coluna "idScene"
+            rs.getString("title_scene"),                                 //.getString pega uma String ao invés de um inteiro
+            rs.getString("dc_scene"));
         }
         return scene;                                                           //Caso não entre na condição do if, retornará a cena nula.
     }
