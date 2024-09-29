@@ -3,20 +3,16 @@ package Model;
 public class Item {
     private Integer idItem;
     private String nameItem;
-    private String positiveResult;
-    private String negativeResult;
+    private String itemResult;
     private String correctCmd;
-    private boolean got;
     private Scene idScene;
     private Integer idNextScene;
 
-    public Item(Integer idItem, String nameItem, String positiveResult, String negativeResult, String correctCmd, boolean got, Scene idScene, Integer idNextScene) {
+    public Item(Integer idItem, String nameItem, String itemResult, String correctCmd, Scene idScene, Integer idNextScene) {
         this.idItem = idItem;
         this.nameItem = nameItem;
-        this.positiveResult = positiveResult;
-        this.negativeResult = negativeResult;
+        this.itemResult = itemResult;
         this.correctCmd = correctCmd;
-        this.got = got;
         this.idScene = idScene;
         this.idNextScene = idNextScene;
     }
@@ -37,20 +33,12 @@ public class Item {
         this.nameItem = nameItem;
     }
 
-    public String getPositiveResult() {
-        return positiveResult;
+    public String getResultItem() {
+        return itemResult;
     }
 
-    public void setPositiveResult(String positiveResult) {
-        this.positiveResult = positiveResult;
-    }
-
-    public String getNegativeResult() {
-        return negativeResult;
-    }
-
-    public void setNegativeResult(String negativeResult) {
-        this.negativeResult = negativeResult;
+    public void setResultItem(String resultItem) {
+        this.itemResult= resultItem;
     }
 
     public String getCorrectCmd() {
@@ -59,14 +47,6 @@ public class Item {
 
     public void setCorrectCmd(String correctCmd) {
         this.correctCmd = correctCmd;
-    }
-
-    public boolean isGot() {
-        return got;
-    }
-
-    public void setGot(boolean got) {
-        this.got = got;
     }
 
     public Scene getIdScene() {
@@ -90,10 +70,8 @@ public class Item {
         return "Item{" +
                 "idItem=" + idItem +
                 ", nameItem='" + nameItem + '\'' +
-                ", positiveResult='" + positiveResult + '\'' +
-                ", negativeResult='" + negativeResult + '\'' +
+                ", resultItem='" + itemResult + '\'' +
                 ", correctCmd='" + correctCmd + '\'' +
-                ", got=" + got +
                 ", idScene=" + idScene +
                 ", idNextScene=" + idNextScene +
                 '}';

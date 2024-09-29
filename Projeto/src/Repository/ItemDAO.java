@@ -24,10 +24,8 @@ public class ItemDAO {
             item = new Item(
             rs.getInt("id_item"),
             rs.getString("name_item"),
-            rs.getString("positive_result"),
-            rs.getString("negative_result"),
+            rs.getString("item_result"),
             rs.getString("correct_cmd"),
-            rs.getBoolean("got"),
             SceneDAO.findSceneById(id),
             rs.getInt("id_next_scene"));
             listItem.add(item);
@@ -48,10 +46,8 @@ public class ItemDAO {
             item = new Item(
             rs.getInt("id_item"),
             rs.getString("name_item"),
-            rs.getString("positive_result"),
-            rs.getString("negative_result"),
+            rs.getString("item_result"),
             rs.getString("correct_cmd"),
-            rs.getBoolean("got"),
             SceneDAO.findSceneById(id),
             rs.getInt("id_next_scene"));
         }
@@ -73,10 +69,8 @@ public class ItemDAO {
             item = new Item(
                     rs.getInt("id_item"),
                     rs.getString("name_item"),
-                    rs.getString("positive_result"),
-                    rs.getString("negative_result"),
+                    rs.getString("item_result"),
                     rs.getString("correct_cmd"),
-                    rs.getBoolean("got"),
                     SceneDAO.findSceneById(id),
                     rs.getInt("id_next_scene"));
             listItem.add(item);
@@ -84,7 +78,7 @@ public class ItemDAO {
         return listItem;
     }
 
-    public static void update(){
+    public static void updateTaco(){
 
     }
 }

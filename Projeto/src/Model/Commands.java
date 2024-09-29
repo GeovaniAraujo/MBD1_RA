@@ -2,6 +2,7 @@ package Model;
 
 import Repository.InvetoryDAO;
 import Repository.ItemDAO;
+import Repository.SaveDAO;
 import Repository.SceneDAO;
 
 import java.sql.SQLException;
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Commands {
+
+    static Scanner sc = new Scanner(System.in);
 
     public static boolean correctCmd(String cmd, int cenaAtual) throws SQLException {
         ArrayList<String> cmdsCorretos = new ArrayList<>();
@@ -37,14 +40,17 @@ public class Commands {
     public static void get(int idItem, int idSave) throws SQLException {
         if (InvetoryDAO.addItem(idItem, idSave)) {//me pareceu gambiarra!
             System.out.println("Item adicionado ao inventário.");
-            System.out.println(ItemDAO.findItemById(idItem).getPositiveResult());
+            System.out.println(ItemDAO.findItemById(idItem).getResultItem());
         }
     }
 
     public static void start() throws SQLException {
-        Scene scene1 = SceneDAO.findSceneById(1);
-        System.out.println(scene1.getTitleScene());
-        System.out.println(scene1.getDcScene());
+        System.out.println("Digite start");
+        String cmd = sc.nextLine();
+        while(!cmd.equalsIgnoreCase("start")){
+            System.out.println("Comando inválido.");
+            cmd = sc.nextLine();
+        }
     }
 
     public static void help() {
@@ -110,8 +116,7 @@ public class Commands {
     }
 
     public static String validacao(String cmd, int idScene, int idSave) throws SQLException {
-        Scanner sc = new Scanner(System.in);
-        String[] cmdValido = {"get", "use", "help", "inventory", "save", "start"};
+        String[] cmdValido = {"get", "use", "help", "inventory", "save","check","restart"};
         String[] arrayCmd = cmd.split(" ");
 
 
@@ -136,7 +141,13 @@ public class Commands {
                     Commands.help();
                     bool = false;
                 } else if (cmd.equalsIgnoreCase("inventory")) {
-                    InvetoryDAO.searchInventoryInnerJoin(idSave);
+                    InvetoryDAO.searchInventory(idSave);
+                    bool = false;
+                } else if (cmd.equalsIgnoreCase("save")) {
+                    SaveDAO.saveGame(idSave, idScene);
+                    System.out.println("Jogo salvo.");
+                } else if (cmd.equalsIgnoreCase("check") && arrayCmd.length > 1&&validacaoItem(arrayCmd)!=null) {
+                    InvetoryDAO.checkItem(validacaoItem(arrayCmd), idSave);
                     bool = false;
                 } else if (cmd.equalsIgnoreCase("get") && arrayCmd.length > 1) {
                     boolean bool2 = false;
@@ -168,6 +179,7 @@ public class Commands {
         }
         return cmd;
     }
+
 }
 
 

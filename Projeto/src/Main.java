@@ -5,6 +5,7 @@ import Repository.SaveDAO;
 
 import java.sql.SQLException;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -13,20 +14,16 @@ public class Main {
         String cmd;
         Commands.help();
 
+        System.out.println();
+
         Save save = SaveDAO.load();
 
-        int idScene = save.getScene().getIdScene();
-        int idSave= save.getIdSave();
+        Scene.executionScene(save.getScene().getIdScene(),save.getIdSave());
 
-        Scene.scene1(idSave);
-
-        idScene=Commands.nextScene(idScene);
-
-        SaveDAO.saveGame(idSave,idScene);
 
         cmd = sc.nextLine();
 
-        Commands.validacao(cmd,idScene,idSave);
+
 
 
 

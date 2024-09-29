@@ -1,9 +1,10 @@
 package Model;
 
 import Repository.InvetoryDAO;
+import Repository.ItemDAO;
+import Repository.SceneDAO;
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Scanner;
 
 public class Scene {
@@ -11,39 +12,54 @@ public class Scene {
     private String titleScene;
     private String dcScene;
 
+
     public Scene(Integer idScene, String titleScene, String dcScene) {
         this.idScene = idScene;
         this.titleScene = titleScene;
         this.dcScene = dcScene;
     }
+    static Scanner sc = new Scanner(System.in);
+    public static void executionScene(int idScene, int idSave) throws SQLException {
+        String cmd = "";
+        while(idScene<5) {
+            if (idScene == 1) {
+                Commands.start();
+                cmd = Scene.scene1(idSave, idScene);
+                idScene = Commands.nextScene(idScene);
+            } else if (idScene == 2){
 
-    public static void reset(){
-
-    }
-
-    public static void scene1(int idSave) throws SQLException {
-        Scanner sc = new Scanner(System.in);
-        int idScene = 1;
-        System.out.println("Digite start");
-        String cmd = sc.nextLine();
-        while(!cmd.equalsIgnoreCase("start")){
-            System.out.println("Comando inválido.");
-            cmd = sc.nextLine();
-        }
-        Commands.validacao(cmd,idScene,idSave);
-        while (!cmd.equalsIgnoreCase("use porta")) {
-            cmd = sc.nextLine();
-            cmd=Commands.validacao(cmd,idScene,idSave);
-            while (cmd.equalsIgnoreCase("use porta")&&!InvetoryDAO.findItemInventory(idSave,1)&&!InvetoryDAO.findItemInventory(idSave,2)){
-                System.out.println("Pegue algum item.");
-                cmd = sc.nextLine();
-                cmd=Commands.validacao(cmd,idScene,idSave);
             }
         }
-
     }
 
+    public static void scene2(int idSave, int idScene) throws SQLException {
+        Scene scene1 = SceneDAO.findSceneById(idScene);
+        System.out.println(scene1.getTitleScene());
+        System.out.println(scene1.getDcScene());
 
+        String cmd = sc.nextLine();
+        cmd = Commands.validacao(cmd, idScene, idSave);
+        while (!cmd.equalsIgnoreCase("use caminhão")||!cmd.equalsIgnoreCase("get corda")) {
+            cmd = sc.nextLine();
+            cmd=Commands.validacao(cmd,idScene,idSave);
+        }
+    }
+
+    public static String scene1(int idSave, int idScene) throws SQLException {
+        Scene scene = SceneDAO.findSceneById(idScene);
+        System.out.println(scene.getTitleScene());
+        System.out.println(scene.getDcScene());
+
+        String cmd;
+        cmd = sc.nextLine();
+        cmd = Commands.validacao(cmd, idScene, idSave);
+        while (cmd.equalsIgnoreCase("use porta") && !InvetoryDAO.findItemInventory(idSave, 1) && !InvetoryDAO.findItemInventory(idSave, 2)) {
+            System.out.println("Pegue algum item.");
+            cmd = sc.nextLine();
+            cmd = Commands.validacao(cmd, idScene, idSave);
+        }
+        return cmd;
+    }
 
     public Integer getIdScene() {
         return idScene;
