@@ -2,6 +2,7 @@ package Model;
 
 import Repository.InvetoryDAO;
 import Repository.ItemDAO;
+import Repository.SaveDAO;
 import Repository.SceneDAO;
 
 import java.sql.SQLException;
@@ -25,7 +26,6 @@ public class Scene {
         String cmd = "";
 
         while(idScene<5) {
-
             if (idScene == 1) {
                 cmd = scene1(idSave, idScene);
                 idScene++;
@@ -33,30 +33,41 @@ public class Scene {
                 cmd = scene2(idSave, idScene);
                 idScene++;
             } else if (idScene == 3){
-                System.out.println(ItemDAO.findItemById(1).getResultItem());
-                System.out.println("");
-                System.out.println(ItemDAO.findItemById(2).getResultItem());
-                System.out.println("cena 3");
+                cmd = scene3(idSave,idScene);
                 idScene++;
-                break;
+            } else {
+                System.out.println("THE END");
+                idScene = 1;
+                InvetoryDAO.clearInventory(idSave);
             }
             if (cmd.equalsIgnoreCase("restart")){
                 idScene=1;
                 InvetoryDAO.clearInventory(idSave);
+            } else if (cmd.equalsIgnoreCase("load")){
+                Save save = SaveDAO.load();
+                idScene=save.getScene().getIdScene();
+                idSave=save.getIdSave();
             }
         }
     }
 
-    public static void scene3(int idSave, int idScene) throws SQLException {
+    public static String scene3(int idSave, int idScene) throws SQLException {
         Scene scene = SceneDAO.findSceneById(idScene);
         System.out.println(scene.getTitleScene());
         System.out.println(scene.getDcScene());
 
         String cmd = sc.nextLine();
         cmd = Commands.validacao(cmd, idScene, idSave);
-        
+
+        while(cmd.equalsIgnoreCase("use taco")&&InvetoryDAO.findItemInventory(idSave,1)||cmd.equalsIgnoreCase("use meia")&&InvetoryDAO.findItemInventory(idSave,1)){
+            System.out.println("Este item não está no inventário.");
+            cmd = sc.nextLine();
+            cmd = Commands.validacao(cmd, idScene, idSave);
+        }
 
 
+
+        return cmd;
     }
 
     public static String scene2(int idSave, int idScene) throws SQLException {

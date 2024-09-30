@@ -101,7 +101,7 @@ public class Commands {
     }
 
     public static String validacao(String cmd, int idScene, int idSave) throws SQLException {
-        String[] cmdValido = {"get", "use", "help", "inventory", "save","check","restart"};
+        String[] cmdValido = {"get", "use", "help", "inventory", "save","check","restart","load"};
         String[] arrayCmd = cmd.split(" ");
 
         List<String> sceneItems = validacaoItemCena(idScene);
@@ -109,7 +109,7 @@ public class Commands {
         boolean bool = false;
 
         while (!bool) {
-            if (!correctCmd(cmd, idScene)&&!cmd.equalsIgnoreCase("restart")) {
+            if (!correctCmd(cmd, idScene)&&!cmd.equalsIgnoreCase("restart")&&!cmd.equalsIgnoreCase("load")) {
                 bool = true;
                 for (int j = 0; j < cmdValido.length; j++) {
                     if (arrayCmd[0].equalsIgnoreCase(cmdValido[j])) {
