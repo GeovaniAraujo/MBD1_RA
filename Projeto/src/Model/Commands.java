@@ -3,25 +3,24 @@ package Model;
 import Repository.InvetoryDAO;
 import Repository.ItemDAO;
 import Repository.SaveDAO;
-import Repository.SceneDAO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Commands {
 
     static Scanner sc = new Scanner(System.in);
 
-    public static boolean correctCmd(String cmd, int cenaAtual) throws SQLException {
-        ArrayList<String> cmdsCorretos = new ArrayList<>();
+    public static boolean correctCmd(String cmd, int idScene) throws SQLException {
         boolean bool = false;
-        for (int i = 0; i < ItemDAO.findItemByScene(cenaAtual).size(); i++) {
-            if(i>0&&cmdsCorretos.size()==i){
-                break;
-            }
-            cmdsCorretos.add(ItemDAO.findItemByNextScene(cenaAtual).get(i).getCorrectCmd());
-            if (cmd.equalsIgnoreCase(cmdsCorretos.get(i))) {
+
+        List<Item> nextSceneItems = ItemDAO.findItemByNextScene(idScene);
+
+        for (int i = 0; i < nextSceneItems.size(); i++) {
+
+            if (cmd.equalsIgnoreCase(nextSceneItems.get(i).getCorrectCmd())) {
                 bool = true;
                 break;
             }
@@ -29,27 +28,10 @@ public class Commands {
         return bool;
     }
 
-    public static int nextScene(int idScene) throws SQLException {
-        idScene = idScene + 1;
-        Scene scene1 = SceneDAO.findSceneById(idScene);
-        System.out.println(scene1.getTitleScene());
-        System.out.println(scene1.getDcScene());
-        return idScene;
-    }
-
     public static void get(int idItem, int idSave) throws SQLException {
         if (InvetoryDAO.addItem(idItem, idSave)) {//me pareceu gambiarra!
             System.out.println("Item adicionado ao inventário.");
             System.out.println(ItemDAO.findItemById(idItem).getResultItem());
-        }
-    }
-
-    public static void start() throws SQLException {
-        System.out.println("Digite start");
-        String cmd = sc.nextLine();
-        while(!cmd.equalsIgnoreCase("start")){
-            System.out.println("Comando inválido.");
-            cmd = sc.nextLine();
         }
     }
 
@@ -66,9 +48,12 @@ public class Commands {
         System.out.println("*(-ITEM) item retirado do inventário.");
     }
 
-    public static ArrayList<String> validacaoItemCena(int idScene) throws SQLException {
-        ArrayList<String> nomes = new ArrayList<>();
-        for (int i = 0; i < ItemDAO.findItemByScene(idScene).size(); i++) {
+    public static List<String> validacaoItemCena(int idScene) throws SQLException {
+        List<String> nomes = new ArrayList<>();
+
+        List<Item> sceneItems = ItemDAO.findItemByScene(idScene);
+
+        for (int i = 0; i < sceneItems.size(); i++) {
             nomes.add(ItemDAO.findItemByScene(idScene).get(i).getNameItem());
         }
         return nomes;
@@ -119,11 +104,12 @@ public class Commands {
         String[] cmdValido = {"get", "use", "help", "inventory", "save","check","restart"};
         String[] arrayCmd = cmd.split(" ");
 
+        List<String> sceneItems = validacaoItemCena(idScene);
 
         boolean bool = false;
 
         while (!bool) {
-            if (!correctCmd(cmd, idScene)) {
+            if (!correctCmd(cmd, idScene)&&!cmd.equalsIgnoreCase("restart")) {
                 bool = true;
                 for (int j = 0; j < cmdValido.length; j++) {
                     if (arrayCmd[0].equalsIgnoreCase(cmdValido[j])) {
@@ -134,11 +120,8 @@ public class Commands {
                     }
                 }
 
-
-                if (cmd.equalsIgnoreCase("start")) {
-                    Commands.start();
-                } else if (cmd.equalsIgnoreCase("help")) {
-                    Commands.help();
+                if (cmd.equalsIgnoreCase("help")) {
+                    help();
                     bool = false;
                 } else if (cmd.equalsIgnoreCase("inventory")) {
                     InvetoryDAO.searchInventory(idSave);
@@ -146,22 +129,22 @@ public class Commands {
                 } else if (cmd.equalsIgnoreCase("save")) {
                     SaveDAO.saveGame(idSave, idScene);
                     System.out.println("Jogo salvo.");
+                    bool = false;
                 } else if (cmd.equalsIgnoreCase("check") && arrayCmd.length > 1&&validacaoItem(arrayCmd)!=null) {
                     InvetoryDAO.checkItem(validacaoItem(arrayCmd), idSave);
                     bool = false;
                 } else if (cmd.equalsIgnoreCase("get") && arrayCmd.length > 1) {
                     boolean bool2 = false;
-                    for (int i = 0; i < validacaoItemCena(idScene).size(); i++) {
-                        if (validacaoItemCena(idScene).get(i).equalsIgnoreCase(arrayCmd[1])) {
-                            Commands.get(validacaoItem(arrayCmd),idSave);
-                            bool2 = true;
 
+                    for (int i = 0; i < sceneItems.size(); i++) {
+                        if (sceneItems.get(i).equalsIgnoreCase(arrayCmd[1])) {
+                            get(validacaoItem(arrayCmd),idSave);
+                            bool2 = true;
                             break;
                         }
                     }
                     if (!bool2) {
                         System.out.println("Item inválido.");
-
                     }
                     bool = false;
                 } else {

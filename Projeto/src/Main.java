@@ -20,7 +20,6 @@ public class Main {
 
         Scene.executionScene(save.getScene().getIdScene(),save.getIdSave());
 
-
         cmd = sc.nextLine();
 
 

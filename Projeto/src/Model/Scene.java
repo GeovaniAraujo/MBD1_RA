@@ -19,33 +19,67 @@ public class Scene {
         this.dcScene = dcScene;
     }
     static Scanner sc = new Scanner(System.in);
+
+
     public static void executionScene(int idScene, int idSave) throws SQLException {
         String cmd = "";
-        while(idScene<5) {
-            if (idScene == 1) {
-                Commands.start();
-                cmd = Scene.scene1(idSave, idScene);
-                idScene = Commands.nextScene(idScene);
-            } else if (idScene == 2){
 
+        while(idScene<5) {
+
+            if (idScene == 1) {
+                cmd = scene1(idSave, idScene);
+                idScene++;
+            } else if (idScene == 2){
+                cmd = scene2(idSave, idScene);
+                idScene++;
+            } else if (idScene == 3){
+                System.out.println(ItemDAO.findItemById(1).getResultItem());
+                System.out.println("");
+                System.out.println(ItemDAO.findItemById(2).getResultItem());
+                System.out.println("cena 3");
+                idScene++;
+                break;
+            }
+            if (cmd.equalsIgnoreCase("restart")){
+                idScene=1;
+                InvetoryDAO.clearInventory(idSave);
             }
         }
     }
 
-    public static void scene2(int idSave, int idScene) throws SQLException {
-        Scene scene1 = SceneDAO.findSceneById(idScene);
-        System.out.println(scene1.getTitleScene());
-        System.out.println(scene1.getDcScene());
+    public static void scene3(int idSave, int idScene) throws SQLException {
+        Scene scene = SceneDAO.findSceneById(idScene);
+        System.out.println(scene.getTitleScene());
+        System.out.println(scene.getDcScene());
 
         String cmd = sc.nextLine();
         cmd = Commands.validacao(cmd, idScene, idSave);
-        while (!cmd.equalsIgnoreCase("use caminhão")||!cmd.equalsIgnoreCase("get corda")) {
-            cmd = sc.nextLine();
-            cmd=Commands.validacao(cmd,idScene,idSave);
+        
+
+
+    }
+
+    public static String scene2(int idSave, int idScene) throws SQLException {
+        Scene scene = SceneDAO.findSceneById(idScene);
+        System.out.println(scene.getTitleScene());
+        System.out.println(scene.getDcScene());
+
+        String cmd = sc.nextLine();
+        cmd = Commands.validacao(cmd, idScene, idSave);
+
+        if (cmd.equalsIgnoreCase("get corda")){
+            System.out.println(ItemDAO.findItemById(4).getResultItem());
+            System.out.println("GAME OVER");
+            cmd = "restart";
         }
+        ItemDAO.updateTacoMeiaScene2();
+        return cmd;
     }
 
     public static String scene1(int idSave, int idScene) throws SQLException {
+
+        ItemDAO.updateTacoMeiaScene1();
+
         Scene scene = SceneDAO.findSceneById(idScene);
         System.out.println(scene.getTitleScene());
         System.out.println(scene.getDcScene());

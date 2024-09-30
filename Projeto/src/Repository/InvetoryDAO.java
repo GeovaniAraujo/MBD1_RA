@@ -79,5 +79,13 @@ public class InvetoryDAO {
         }
     }
 
+    public static void clearInventory(int idSave) throws SQLException {
+        Connection conn = MySql.getConnection();
+        String sql = "DELETE FROM inventory WHERE id_save = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setInt(1,idSave);
+        stmt.executeUpdate();
+    }
+
 
 }
