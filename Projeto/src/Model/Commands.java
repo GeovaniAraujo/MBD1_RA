@@ -4,10 +4,12 @@ import Repository.InvetoryDAO;
 import Repository.ItemDAO;
 import Repository.SaveDAO;
 
+import javax.xml.transform.Source;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.SortedMap;
 
 public class Commands {
 
@@ -28,6 +30,48 @@ public class Commands {
         return bool;
     }
 
+    public static boolean use(String[] cmd, int idScene, int idSave) throws SQLException {
+
+        List<Item> items = ItemDAO.findItemByNextScene(idScene);
+        List<Item> carregavel = new ArrayList<>();
+
+        boolean bool = true;
+
+        for(int i =0; i<items.size(); i++){
+            if (items.get(i).getIdScene()!=null){
+                carregavel.add(items.get(i));
+            }
+        }
+        for (Item iten : carregavel) {
+            if (cmd[1].equalsIgnoreCase(iten.getNameItem())&&!InvetoryDAO.findItemInventory(idSave, iten.getIdItem())){
+                System.out.println("Item não está no inventário.");
+                bool = false;
+                break;
+            }
+        }
+
+        return bool;
+    }
+
+    public static boolean useWith(String[] cmd, int idScene, int idSave) throws SQLException {
+        boolean bool = false;
+        if (idScene!=3){
+            System.out.println("Tenta outra coisa.");
+            return bool;
+        }
+        for(int i=0; i<cmd.length;i++) {
+            if (i==1||i==3) {
+                bool = InvetoryDAO.findItemInventory(idSave, ItemDAO.selectNameItems(cmd[i]));
+
+                if (!bool){
+                    System.out.println("Este item não esta no inventário.");
+                    break;
+                }
+            }
+        }
+        return bool;
+    }
+
     public static void get(int idItem, int idSave) throws SQLException {
         if (InvetoryDAO.addItem(idItem, idSave)) {//me pareceu gambiarra!
             System.out.println("Item adicionado ao inventário.");
@@ -38,11 +82,14 @@ public class Commands {
     public static void help() {
         System.out.println("Cmd help - Um text game é um tipo de jogo eletrônico onde a interação é realizada por meio de texto. O jogador lê descrições e responde com comandos escritos para avançar na narrativa. Os comandos são:");
         System.out.println("HELP – Apresentara um texto de ajuda com a ideia do textgame e seus comandos;");
-        System.out.println("GET [item]– Pega o item da cena e adiciona ao seu inventário;");
-        System.out.println("USE [item]-Se possível, utilizará o item do inventário;");
-        System.out.println("USE [item] WITH [item]– Combinara dois itens gerando um novo.");
-        System.out.println("INVENTORY – Mostra os itens no inventário;");
-        System.out.println("SAVE – Salva o jogo;");
+        System.out.println("GET [item] - Pega o item da cena e adiciona ao seu inventário;");
+        System.out.println("USE [item] - Se possível, utilizará o item do inventário;");
+        System.out.println("USE [item] WITH [item]– Combinara dois itens gerando um novo;");
+        System.out.println("CHECK [item] - Vê uma descrição do item se o mesmo estiver no seu inventário;");
+        System.out.println("INVENTORY - Mostra os itens no inventário;");
+        System.out.println("RESTART - Reinicia seu jogo desde a cena 1, apagando os itens do inventário;");
+        System.out.println("SAVE - Salva o jogo;");
+        System.out.println("LOAD - Carrega um jogo.");
         System.out.println("*Itens interativos são marcados em CAIXA ALTA/CAPSLOCK.");
         System.out.println("*(+ITEM) item adicionado ao inventário.");
         System.out.println("*(-ITEM) item retirado do inventário.");
@@ -133,7 +180,15 @@ public class Commands {
                 } else if (cmd.equalsIgnoreCase("check") && arrayCmd.length > 1&&validacaoItem(arrayCmd)!=null) {
                     InvetoryDAO.checkItem(validacaoItem(arrayCmd), idSave);
                     bool = false;
-                } else if (cmd.equalsIgnoreCase("get") && arrayCmd.length > 1) {
+                } else if (arrayCmd[0].equalsIgnoreCase("use")&&arrayCmd.length==4&&arrayCmd[2].equalsIgnoreCase("with")){
+                    boolean bool2 = useWith(arrayCmd, idScene, idSave);
+                    if (bool2){
+                        System.out.println("Chris, utilizando todas as habilidades que aprendeu assistindo TV, dá uma de MacGyver e cria um MANGUAL caseiro, colocando a pedra dentro da meia.(+MANGUAL)");
+                        sceneItems.remove("PEDRA");
+                        ItemDAO.mangual(idSave);
+                    }
+                    bool = false;
+                }else if (cmd.equalsIgnoreCase("get") && arrayCmd.length > 1) {
                     boolean bool2 = false;
 
                     for (int i = 0; i < sceneItems.size(); i++) {
@@ -148,7 +203,7 @@ public class Commands {
                     }
                     bool = false;
                 } else {
-                    System.out.println("Não entendi...");
+                    System.out.println("Tenta outra coisa.");
                     bool = false;
                 }
                 if (!bool) {

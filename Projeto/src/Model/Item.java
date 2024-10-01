@@ -17,6 +17,14 @@ public class Item {
         this.idNextScene = idNextScene;
     }
 
+    public Item(Integer idItem, String nameItem, String itemResult, String correctCmd, Integer idNextScene){
+        this.idItem = idItem;
+        this.nameItem = nameItem;
+        this.itemResult = itemResult;
+        this.correctCmd = correctCmd;
+        this.idNextScene = idNextScene;
+    }
+
     public Integer getIdItem() {
         return idItem;
     }
