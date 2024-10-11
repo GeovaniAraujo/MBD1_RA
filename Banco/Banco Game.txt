@@ -1,0 +1,134 @@
+create table scene(
+id_scene int not null primary key,
+title_scene varchar(30),
+dc_scene longtext
+);
+
+create table item(
+id_item int not null primary key,
+name_item varchar(20),
+dc_item longtext,
+item_result longtext,
+correct_cmd varchar(30),
+id_scene int,
+id_next_scene int,
+foreign key (id_scene) references scene (id_scene)
+);
+
+create table save(
+id_save int primary key,
+id_scene int,
+foreign key (id_scene) references scene (id_scene)
+);
+
+create table inventory(
+id_save int,
+id_item_i int,
+foreign key (id_save) references save (id_save),
+foreign key (id_item_i) references item (id_item)
+);
+
+
+
+drop table inventory;
+drop table save;
+drop table item;
+drop table scene;
+
+
+
+insert into scene values (1,'Casa','Chris, após entrar na máquina do tempo, percebe que está de volta ao seu quarto, na sua velha casa em Bed-Stuy. Ele mal havia chegado, mas já sabia qual era seu objetivo: dar o troco em Caruso e recuperar o dinheiro que o Perigo havia roubado. Chris sabia que, perto da gaveta de MEIA de Julius, ele guardava o seu TACO de baseball. A PORTA parecia estar aberta.');
+
+insert into scene values(2,'Frente da Casa','Saindo de casa, Chris vê Drew e Tonya brincando de pular CORDA ao lado do CAMINHÃO de correias do trabalho de Julius. Ele deveria estar por perto, mas Chris não gostaria de ser reconhecido.');
+
+insert into scene values (3,'Rua','Finalmente Chris avista Perigo num beco, estaciona o caminhão e vai confronta-lo. Caminhando em sua direção acaba tropeçando em uma PEDRA, fazendo com que Perigo perceba a sua presença.');
+
+insert into scene values (4,'Trabalho','Agora sem arma e com dinheiro, Chris vai atrás de Monk, sobrinho de Doc. Chegando na conveniência em que trabalhava, encontra Monk encostado no balcão. -“Bom dia” diz Chris. - “Me disseram que você pode me arrumar um brinquedo de furar moleton.”
+-“US$300,00 a 9MM, US$400,00 a .45 e US$550,00 a DOSE” diz Monk em baixo tom.
+');
+
+insert into scene values (5,'Escola','Chris ao chegar perto da escola se depara com Caruso saindo da aula, que fica perplexo ao vê-lo 30 anos mais velho.');
+
+
+
+
+
+update item set item_result = 'Chris empunha o taco e parte pra cima de Perigo.
+ Após muita luta, consegue nocautea-lo quebrando o taco em sua cabeça (-TACO). Agora ele tinha todos os US$300,00 que Perigo carregava (+DINHEIRO).' where id_item = 1;
+ 
+
+update item set item_result = 'Chris enrola a meia na mão cai no soco com Perigo. Infelizmente ele ainda é mais fraco e perde a luta.' where id_item = 2;
+
+
+
+- insert into item values (1,'TACO','É uma boa solução para quando você está perdendo o argumento.','Com taco de baseball em mãos, agora Chris era implacável.(+TACO)','USE TACO',1,4);
+ 
+- insert into item values (2,'MEIA','Sempre pronta para aquecer seus pés ou desaparecer sem explicação.','Não sei o quão ameaçadoras eram as meias na década de 80 no Brooklyn, mas ok... Com certeza, elas ajudariam em sua vingança.(+MEIA)','USE MEIA',1,4);
+
+insert into item values (3,'PORTA','','','USE PORTA',null,2);
+
+- insert into item values (4,'CORDA','','Chris pega a corda da mão de Drew(+CORDA). Assustada com um estranho tentando roubar seu irmão, Tonya corre para dentro de casa e liga para a polícia. Chris é preso.','GET CORDA',2,3);
+
+insert into item values (5,'CAMINHÃO','','Chris entra no caminhão estacionado que milagrosamente está com a chave na ignição. Da partida e vai atrás do Perigo.','USE CAMINHÃO',2,3);
+
+insert into item values (6,'PEDRA','A primeira ferramenta multifuncional da humanidade, ainda sem manual de instruções.','Chris, enfurecido, pega a maldita pedra. O que será que ele irá com ela?(+PEDRA)','USE PEDRA',3,4);
+
+insert into item values (7,'MANGUAL','Quando a brutalidade medieval encontra a arte da improvisação doméstica.','Chris utiliza sua nova arma para surrar Perigo. Após muita luta, consegue nocautea-lo e pegar todos os US$300,00 que ele carregava (+DINHEIRO), porém no processo a meia rasga (-MANGUAL).','USE MANGUAL',3,4);
+
+insert into item values (8,'9MM','9MM, a arma da conciliação: quando alguém chega com ela na briga todo mundo quer paz.','Com o dinheiro que conseguiu de Perigo, Chris compra uma 9mm para acertar contas com Caruso (+9MM)(-DINHEIRO).','GET 9MM',4,5);
+
+insert into item values (9,'.45','','','',4,null);
+
+insert into item values (10,'DOZE','','','',4,null);
+
+insert into item values (11,'DINHEIRO','HERE COMES THE MONEEEEYYYY','','',4,null)
+
+
+update scene set dc_scene = 'Agora sem arma e com dinheiro, Chris vai atrás de Monk, sobrinho de Doc. Chegando na conveniência em que trabalhava, encontra Monk encostado no balcão. -“Bom dia” diz Chris. - “Me disseram que você pode me arrumar um brinquedo de furar moleton.”
+-“US$300,00 a 9MM, US$400,00 a .45 e US$550,00 a DOZE” diz Monk em baixo tom.' where id_scene = 4
+
+
+
+
+insert into save values (1,1);
+
+insert into save values (2,1);
+
+insert into save values (3,1);
+
+insert into save values (4,1);
+
+insert into save values (5,1);
+
+insert into save values (6,1);
+
+insert into save values (7,1);
+
+insert into save values (8,1);
+
+insert into save values (9,1);
+
+insert into save values (10,1);
+
+
+ 
+
+select * from inventory i
+
+select * from save s 
+
+select * from scene s 
+
+select * from item i 
+
+
+
+delete from item;
+
+delete from inventory
+
+delete from save
+
+delete from scene 
+
+

@@ -4,7 +4,7 @@ import Repository.InvetoryDAO;
 import Repository.ItemDAO;
 import Repository.SaveDAO;
 import Repository.SceneDAO;
-import com.mysql.cj.BindValue;
+
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -174,7 +174,7 @@ public class Scene {
         return idScene;
     }
 
-    public void setIdScene(Integer idScne) {
+    public void setIdScene(Integer idScene) {
         this.idScene = idScene;
     }
 

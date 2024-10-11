@@ -29,9 +29,10 @@ public class InvetoryDAO {
 
     public static void searchInventory(int idSave) throws SQLException {
         Connection conn = MySql.getConnection();
-        String sql = "SELECT name_item FROM item i\n" +
-                "INNER JOIN inventory inv ON i.id_item = inv.id_item_i\n" +
-                "WHERE id_save = ?;";
+        String sql = """
+                SELECT name_item FROM item i
+                INNER JOIN inventory inv ON i.id_item = inv.id_item_i
+                WHERE id_save = ?;""";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setInt(1, idSave);
         ResultSet rs = stmt.executeQuery();

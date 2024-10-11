@@ -4,12 +4,10 @@ import Repository.InvetoryDAO;
 import Repository.ItemDAO;
 import Repository.SaveDAO;
 
-import javax.xml.transform.Source;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.SortedMap;
 
 public class Commands {
 
@@ -20,36 +18,12 @@ public class Commands {
 
         List<Item> nextSceneItems = ItemDAO.findItemByNextScene(idScene);
 
-        for (int i = 0; i < nextSceneItems.size(); i++) {
-
-            if (cmd.equalsIgnoreCase(nextSceneItems.get(i).getCorrectCmd())) {
+        for (Item nextSceneItem : nextSceneItems) {
+            if (cmd.equalsIgnoreCase(nextSceneItem.getCorrectCmd())) {
                 bool = true;
                 break;
             }
         }
-        return bool;
-    }
-
-    public static boolean use(String[] cmd, int idScene, int idSave) throws SQLException {
-
-        List<Item> items = ItemDAO.findItemByNextScene(idScene);
-        List<Item> carregavel = new ArrayList<>();
-
-        boolean bool = true;
-
-        for(int i =0; i<items.size(); i++){
-            if (items.get(i).getIdScene()!=null){
-                carregavel.add(items.get(i));
-            }
-        }
-        for (Item iten : carregavel) {
-            if (cmd[1].equalsIgnoreCase(iten.getNameItem())&&!InvetoryDAO.findItemInventory(idSave, iten.getIdItem())){
-                System.out.println("Item não está no inventário.");
-                bool = false;
-                break;
-            }
-        }
-
         return bool;
     }
 
@@ -107,14 +81,14 @@ public class Commands {
     }
 
     public static Integer validacaoItem(String[] arrayCmd) {
-        String[] itensValidos = {"TACO", "MEIA", "CORDA", "CAMINHÃO", "PEDRA", "MANGUAL", "9MM", ".45", "DOSE"};
+        String[] itensValidos = {"TACO", "MEIA", "CORDA", "CAMINHÃO", "PEDRA", "MANGUAL", "9MM", ".45", "DOSE","DINHEIRO"};
         String item = "";
         Integer items = null;
         for (int i = 0; i < arrayCmd.length; i++) {
             if (arrayCmd.length > 1 && i == 1 || i == 3) {
-                for (int j = 0; j < itensValidos.length; j++) {
-                    if (arrayCmd[i].equalsIgnoreCase(itensValidos[j])) {
-                        item = itensValidos[j];
+                for (String itensValido : itensValidos) {
+                    if (arrayCmd[i].equalsIgnoreCase(itensValido)) {
+                        item = itensValido;
                         break;
                     } else {
                         item = "0";
@@ -141,6 +115,8 @@ public class Commands {
             items = 9;
         } else if (item.equalsIgnoreCase("DOSE")) {
             items = 10;
+        } else if (item.equalsIgnoreCase("DINHEIRO")) {
+            items = 11;
         } else if (item.equals("0")) {
             System.out.println("Item inválido");
         }
@@ -158,9 +134,9 @@ public class Commands {
         while (!bool) {
             if (!correctCmd(cmd, idScene)&&!cmd.equalsIgnoreCase("restart")&&!cmd.equalsIgnoreCase("load")) {
                 bool = true;
-                for (int j = 0; j < cmdValido.length; j++) {
-                    if (arrayCmd[0].equalsIgnoreCase(cmdValido[j])) {
-                        cmd = cmdValido[j];
+                for (String s : cmdValido) {
+                    if (arrayCmd[0].equalsIgnoreCase(s)) {
+                        cmd = s;
                         break;
                     } else {
                         cmd = "erro";
@@ -191,9 +167,9 @@ public class Commands {
                 }else if (cmd.equalsIgnoreCase("get") && arrayCmd.length > 1) {
                     boolean bool2 = false;
 
-                    for (int i = 0; i < sceneItems.size(); i++) {
-                        if (sceneItems.get(i).equalsIgnoreCase(arrayCmd[1])) {
-                            get(validacaoItem(arrayCmd),idSave);
+                    for (String sceneItem : sceneItems) {
+                        if (sceneItem.equalsIgnoreCase(arrayCmd[1])) {
+                            get(validacaoItem(arrayCmd), idSave);
                             bool2 = true;
                             break;
                         }
